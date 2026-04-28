@@ -1,0 +1,44 @@
+networks:
+    blog-api-net:
+        driver: bridge
+services:
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: blog-api-service
+        ports:
+            - 8000:8000
+        volumes:
+            - .:/app
+        depends_on:
+            - postgres_db
+        environment:
+            - DB_HOST=postgres_db
+        networks:
+            - blog-api-net
+        entrypoint: ["/bin/sh", "-c"]
+        command:
+            - |
+                composer install
+                php artisan migrate
+                php artisan serve --host=0.0.0.0 --port=8000
+    postgres_db:
+        image: postgres:18.3-alpine
+        container_name: blogdb
+        ports:
+            - "5432:5432"
+        volumes:
+            # - ./data:/var/lib/postgresql/data
+            - ./postgres_data:/var/lib/postgresql
+        environment:
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=postgres
+            - POSTGRES_DB=blogdb
+        networks:
+            - blog-api-net
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U postgres"]
+            interval: 5s
+            timeout: 5s
+            retries: 5
