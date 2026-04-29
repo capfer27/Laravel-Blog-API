@@ -37,7 +37,7 @@ class PostController extends CoreApiController
         $post = Post::create($request->validated());
 
         // Trigger the 10-minute Job.
-        ProcessPostModeration::dispatch($post)->delay(now()->addSeconds(10));
+        ProcessPostModeration::dispatch($post)->delay(now()->addMinutes(10));
         
 
         return $this->successResponseV2(new PostResource($post), PostEvent::POST_CREATED->value, Response::HTTP_CREATED);
