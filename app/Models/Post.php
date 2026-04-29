@@ -11,8 +11,8 @@ class Post extends Model
 {
     use HasFactory, SoftDeletes;
 
-    const CREATED_AT = 'created_at';
-    const UPDATED_AT = null; 
+    const CREATED_AT = 'created_at'; // ensure we only used created_at
+    const UPDATED_AT = null; // disable updated_at field
 
     protected $attributes = [
         'status' => PostStatus::MODERATION

@@ -4,9 +4,7 @@ namespace App\Http\Controllers\Api\V1\Blog\Post;
 
 use App\Enums\PostEvent;
 use App\Enums\PostError;
-use App\Enums\PostStatus;
 use App\Http\Controllers\Api\CoreApiController;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\Blog\Post\PostStoreRequest;
 use App\Http\Resources\Api\V1\Blog\Post\PostResource;
 use App\Jobs\ProcessPostModeration;
@@ -28,7 +26,7 @@ class PostController extends CoreApiController
 
         $posts = $query->get();
 
-        return $this->successResponseV2(PostResource::collection($posts));
+        return $this->successResponse(PostResource::collection($posts));
     }
 
     // Create a post
@@ -37,35 +35,35 @@ class PostController extends CoreApiController
         $post = Post::create($request->validated());
 
         // Trigger the 10-minute Job.
-        ProcessPostModeration::dispatch($post)->delay(now()->addSeconds(10));
+        ProcessPostModeration::dispatch($post)->delay(now()->addMinutes(10));
         
 
-        return $this->successResponseV2(new PostResource($post), PostEvent::POST_CREATED->value, Response::HTTP_CREATED);
+        return $this->successResponse(new PostResource($post), PostEvent::POST_CREATED->value, Response::HTTP_CREATED);
     }
 
     // Show a single post
-    public function show($id) {
+    public function show(int $id) {
         $post = Post::find($id);
 
         if (!$post) {
-            return $this->errorResponseV2(PostError::POST_NOT_FOUND->value, [], Response::HTTP_NOT_FOUND);
+            return $this->errorResponse(PostError::POST_NOT_FOUND->value, [], Response::HTTP_NOT_FOUND);
         }
 
-        return $this->successResponseV2(new PostResource($post));
+        return $this->successResponse(new PostResource($post));
     }
 
-    // delete a specific /posts/{id} (Soft Delete)
-    public function delete($id): JsonResponse
+    // delete a specific post (Soft Delete)
+    public function delete(int $id): JsonResponse
     {
         $post = Post::find($id);
 
         if (!$post) {
-            return $this->errorResponseV2(PostError::POST_NOT_FOUND->value, [], Response::HTTP_NOT_FOUND);
+            return $this->errorResponse(PostError::POST_NOT_FOUND->value, [], Response::HTTP_NOT_FOUND);
         }
 
         $post->delete();
 
-        return $this->successResponseV2([], PostEvent::POST_DELETED->value);
+        return $this->successResponse([], PostEvent::POST_DELETED->value);
     }
 
 }
