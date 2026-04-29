@@ -12,8 +12,8 @@ help:
 	@echo "  make shell   - Перейти в контейнер PHP"
 	@echo "  make seed    - Наполнить базу тестовыми данными (Seed)"
 	@echo "  make fresh   - Сбросить БД и запустить миграции с сидами"
-	@echo "  make test    - Запустить Laravel tests (Pest/PHPUnit)"
-	@echo "  make queue    - Запустить Laravel QUEUE"
+	@echo "  make test    - Запустить tests (Pest/PHPUnit) - (In progress)"
+	@echo "  make queue   - Запустить Laravel QUEUE"
 
 up:
 	$(COMPOSE) up -d
@@ -49,6 +49,7 @@ fresh:
 # Команды для очередей (Queue)
 queue:
 # 	$(COMPOSE) exec app php artisan migrate
+# 	@echo "Создание таблицы jobs..."
 # 	$(COMPOSE) exec app php artisan queue:table
 	@echo "Запуск воркера очередей..."
 	$(COMPOSE) exec app php artisan queue:work
