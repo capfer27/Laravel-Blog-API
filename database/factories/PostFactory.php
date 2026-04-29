@@ -22,8 +22,8 @@ class PostFactory extends Factory
             'title' => $this->faker->sentence(),
             'content' => $this->faker->paragraphs(3, true),
             'status' => $this->faker->randomElement(PostStatus::cases()),
-            'published_at' => $this->faker->optional(0.7)->dateTime(), // 70% this filed might be filled
-            'moderated_at' => $this->faker->optional(0.9)->dateTime(),
+            'published_at' => $this->faker->dateTime(),
+            'moderated_at' => $this->faker->dateTime(),
             'created_at' => now(),
         ];
     }
