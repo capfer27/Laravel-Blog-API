@@ -11,15 +11,16 @@ class Post extends Model
 {
     use HasFactory, SoftDeletes;
 
-    const UPDATED_AT = null; // disable update_at
+    const CREATED_AT = 'created_at';
+    const UPDATED_AT = null; 
 
-    //
+    protected $attributes = [
+        'status' => PostStatus::MODERATION
+    ];
+
     protected $fillable = [
         'title',
         'content',
-        'status',
-        'published_at',
-        'moderated_at',
     ];
 
     /**
