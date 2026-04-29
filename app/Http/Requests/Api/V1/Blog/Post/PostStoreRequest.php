@@ -23,19 +23,29 @@ class PostStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-        'title' => [
-            'required',     
-            'string',       // Must be valid text
-            'min:5',        // Minimum length for SEO/readability
-            'max:255',      
-            'unique:posts', // Prevents duplicate titles in the "posts" table
-        ],
-        'content' => [
-            'required',
-            'string',
-            'min:20',       // Prevents "thin" content
-            'max:65535',    // Matches standard TEXT column limit
-        ],
-    ];
+            'title' => [
+                'required',     
+                'string',       // Must be valid text
+                'min:5',        // Minimum length for SEO/readability
+                'max:255',      
+                'unique:posts', // Prevents duplicate titles in the "posts" table
+            ],
+            'content' => [
+                'required',
+                'string',
+                'min:20',       // Prevents "thin" content
+                'max:65535',    // Matches standard TEXT column limit
+            ],
+        ];
+    }
+
+    protected function prepareForValidation()
+    {
+        // If 'status' is missing or null in the request, set it to the default
+        if (!$this->has('status')) {
+            $this->merge([
+                'status' => \App\Enums\PostStatus::MODERATION->value,
+            ]);
+        }
     }
 }

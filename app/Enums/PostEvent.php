@@ -8,7 +8,3 @@ enum PostEvent: string {
     case POST_RETRIEVED = 'Post Retrieved Successfully';
 }
 
-enum PostError: string {
-    case POST_NOT_FOUND = 'Post Not Found';
-}
-

@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Api\V1\Blog\Post;
 
 use App\Enums\PostEvent;
 use App\Enums\PostError;
+use App\Enums\PostStatus;
 use App\Http\Controllers\Api\CoreApiController;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\Blog\Post\PostStoreRequest;
 use App\Http\Resources\Api\V1\Blog\Post\PostResource;
+use App\Jobs\ProcessPostModeration;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use Illuminate\Http\JsonResponse;
@@ -32,9 +34,10 @@ class PostController extends CoreApiController
     // Create a post
     public function create(PostStoreRequest $request): JsonResponse
     {
-        $post = Post::created($request->validateed());
+        $post = Post::create($request->validated());
 
-        // TODO: Trigger the 10-minute Job here.
+        // Trigger the 10-minute Job.
+        ProcessPostModeration::dispatch($post)->delay(now()->addSeconds(10));
         
 
         return $this->successResponseV2(new PostResource($post), PostEvent::POST_CREATED->value, Response::HTTP_CREATED);
@@ -52,7 +55,7 @@ class PostController extends CoreApiController
     }
 
     // delete a specific /posts/{id} (Soft Delete)
-    public function delete($id)
+    public function delete($id): JsonResponse
     {
         $post = Post::find($id);
 

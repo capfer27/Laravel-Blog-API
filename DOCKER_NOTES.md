@@ -37,3 +37,10 @@ docker exec blog-api-ms php artisan make:resource Api/V1/Blog/Post/PostResource
 docker exec blog-api-ms php artisan make:controller Api/V1/Blog/Post/PostController
 
 docker exec blog-api-ms php artisan install:api
+
+docker exec blog-api-ms php artisan make:job ProcessPostModeration
+
+docker exec blog-api-ms php artisan queue:table
+docker exec blog-api-ms php artisan migrate
+docker exec blog-api-ms php artisan queue:work
+docker exec blog-api-ms php artisan queue:listen
