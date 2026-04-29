@@ -44,3 +44,7 @@ docker exec blog-api-ms php artisan queue:table
 docker exec blog-api-ms php artisan migrate
 docker exec blog-api-ms php artisan queue:work
 docker exec blog-api-ms php artisan queue:listen
+
+docker exec blog-api-ms php artisan make:test API/V1/Blog/PostTest --pest
+
+docker exec blog-api-ms php artisan test --filter=PostTest

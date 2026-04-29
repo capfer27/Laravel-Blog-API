@@ -12,7 +12,7 @@ help:
 	@echo "  make shell   - Перейти в контейнер PHP"
 	@echo "  make seed    - Наполнить базу тестовыми данными (Seed)"
 	@echo "  make fresh   - Сбросить БД и запустить миграции с сидами"
-	@echo "  make test    - Запустить tests (Pest/PHPUnit) - (In progress)"
+	@echo "  make test    - Запустить tests (Pest)"
 	@echo "  make queue   - Запустить Laravel QUEUE"
 
 up:
