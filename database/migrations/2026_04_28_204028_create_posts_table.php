@@ -4,6 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+use App\Enums\PostStatus;
+
 return new class extends Migration
 {
     /**
@@ -16,14 +18,16 @@ return new class extends Migration
             $table->string('title');
             $table->text('content');
 
-            $table->enum('status', ['moderation', 'published', 'rejected'])
-                    ->default('moderation');
+            $table->enum('status', array_column(PostStatus::cases(), 'value'))
+                    ->default(PostStatus::MODERATION->value);
 
             $table->timestamp('published_at')->nullable();
             $table->timestamp('moderated_at')->nullable();
 
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
             $table->softDeletes();
+
+            $table->index('status');
         });
     }
 
