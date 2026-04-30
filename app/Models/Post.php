@@ -31,5 +31,6 @@ class Post extends Model
         'moderated_at' => 'datetime',
         'created_at'   => 'datetime',
         'status' => PostStatus::class,
+        'notification_sent_at' => 'datetime',
     ];
 }
