@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Enums\PostStatus;
+use App\Notifications\PostModeratedNotification;
 use App\Models\Post;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
@@ -41,12 +42,15 @@ class ProcessPostModeration implements ShouldQueue
             $this->post->published_at = now();
         }
 
+        $this->post->notification_sent_at = now();
+
         $this->post->save();
 
         // Simulation: Log the notification fact
-        Log::info("Notification Sent: Post #{$this->post->id} is now {$newStatus->value}");
+        //Log::info("Notification Sent: Post #{$this->post->id} is now {$newStatus->value}");
+        Log::info("Post #{$this->post->id} moderation complete. Status: {$newStatus->value}. Notification recorded.");
 
         // Send notification (imitation via log)
-        //$this->post->notify(new PostModerationNotification($newStatus));
+        //$this->post->notify(new PostModeratedNotification());
     }
 }
